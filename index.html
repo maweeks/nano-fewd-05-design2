@@ -12,11 +12,21 @@
 		<img class="fullWidth" id="catPic" src="cat.jpg"/>
 		<br/>
 		<em id="clicks">Click count: 0</em>
+		<br/><br/>
+		<button onclick="octopus.showAdmin()">Show Admin</button>
+		<div id="admin">
+  			Name: <input type="text" id="adminName"><br>
+  			Image: <input type="text" id="adminURL"><br>
+  			Counter: <input type="text" id="adminCats"><br>
+			<button onclick="octopus.notAdmin()">Cancel</button>
+			<button onclick="octopus.saveCat()">Save</button>
+		</div>
 	</div>
 </body>
 </html>
 <script type="text/javascript">
 	var model = {
+		admin: false,
 		cats: [["Abby", "cat.jpg", 0], ["Dave", "cat2.jpg", 0], ["Jack", "cat3.jpg", 0], ["Jimmy", "cat4.jpg", 0], ["Scott", "cat5.jpg", 0]],
 		currentCat: 0
 	};
@@ -35,6 +45,25 @@
 		},
 		getNoOfCats: function() {
 			return model.cats.length;
+		},
+		getAdmin: function() {
+			return model.admin;
+		},
+		saveCat: function() {
+			var cat = view.getCatChanges();
+			console.log(cat);
+			model.cats[model.currentCat][0] = cat[0];
+			model.cats[model.currentCat][1] = cat[1];
+			model.cats[model.currentCat][2] = cat[2];
+			octopus.notAdmin();
+		},
+		notAdmin: function() {
+			model.admin = false;
+			view.renderCat(model.currentCat);
+		},
+		showAdmin: function() {
+			model.admin = true;
+			view.renderCat(model.currentCat);
 		}
 	};
 
@@ -54,10 +83,23 @@
 			document.getElementById("catList").innerHTML = catListHTML;
 		},
 		renderCat: function(newCat) {
-			document.getElementById("catName").innerHTML = octopus.getCat(newCat)[0];
+			thisCat = octopus.getCat(newCat);
+			document.getElementById("catName").innerHTML = thisCat[0];
 			var catPic = document.getElementById("catPic")
-			catPic.src = octopus.getCat(newCat)[1];
-			document.getElementById("clicks").innerHTML = "Click count: " + octopus.getCat(newCat)[2];
+			catPic.src = thisCat[1];
+			document.getElementById("clicks").innerHTML = "Click count: " + thisCat[2];
+			if (octopus.getAdmin()) {
+				document.getElementById('adminName').value = thisCat[0];
+				document.getElementById('adminURL').value = thisCat[1];
+				document.getElementById('adminCats').value = thisCat[2];
+				document.getElementById('admin').style.display = "block";
+			}
+			else {
+				document.getElementById('admin').style.display = "none";
+			}
+		},
+		getCatChanges: function() {
+			return [document.getElementById('adminName').value,document.getElementById('adminURL').value,document.getElementById('adminCats').value];
 		}
 	};
 
