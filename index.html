@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cat Clicker</title>
+	</head>
+	<body>
+	<div class="float halfWidth">
+		<ul id="catList"><li>CatList</li></ul>
+	</div>
+	<div class="float halfWidth">
+		<h3 id="catName"> [Cat Name] </h3>
+		<img class="fullWidth" id="catPic" src="cat.jpg"/>
+		<br/>
+		<em id="clicks">Click count: 0</em>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	var model = {
+		cats: [["Abby", "cat.jpg", 0], ["Dave", "cat2.jpg", 0], ["Jack", "cat3.jpg", 0], ["Jimmy", "cat4.jpg", 0], ["Scott", "cat5.jpg", 0]],
+		currentCat: 0
+	};
+
+	var octopus = {
+		changeCat: function(newCat) {
+			model.currentCat = newCat;
+			view.renderCat(model.currentCat);
+		},
+		clickCat: function() {
+			model.cats[model.currentCat][2] += 1;
+			view.renderCat(model.currentCat);
+		},
+		getCat: function(catNo) {
+			return model.cats[catNo];
+		},
+		getNoOfCats: function() {
+			return model.cats.length;
+		}
+	};
+
+	var view = {
+		init: function() {
+			catPic.addEventListener('click', function() {
+				octopus.clickCat();
+			});
+			view.renderList();
+			view.renderCat(0);
+		},
+		renderList: function() {
+			var catListHTML = "";
+			for (var i = 0; i < octopus.getNoOfCats(); i++) {
+				catListHTML += "<li><a href='javascript:octopus.changeCat(" + i + ");'>" + octopus.getCat(i)[0] + "</a></li>";
+			}
+			document.getElementById("catList").innerHTML = catListHTML;
+		},
+		renderCat: function(newCat) {
+			document.getElementById("catName").innerHTML = octopus.getCat(newCat)[0];
+			var catPic = document.getElementById("catPic")
+			catPic.src = octopus.getCat(newCat)[1];
+			document.getElementById("clicks").innerHTML = "Click count: " + octopus.getCat(newCat)[2];
+		}
+	};
+
+	view.init();
+</script>
+
+<style type="text/css">
+	.fullWidth {
+		max-width: 100%;
+		width: 100%;
+	}
+	.halfWidth {
+		max-width: 50%;
+		width: 50%;
+	}
+	.float {
+		float: left;
+	}
+</style>
